@@ -10,7 +10,7 @@ import (
 )
 
 
-const port = 8080
+const port = "8080"
 const atlasConnectionUri = "mongodb+srv://anubhav11697:myMongo123@myfirstcluster.hfdwigv.mongodb.net/?retryWrites=true&w=majority"
 
 type application struct {
