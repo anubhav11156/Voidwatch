@@ -28,14 +28,14 @@ func main(){
 
 	app.Domain = "example.com"
 
-	log.Println("Starting application...: ")
+	log.Println("Starting application... ")
 
 	// http.HandleFunc("/",Hello)
 
 	// starts a web server
 	// err := http.ListenAndServe(fmt.Sprintf("https://subwatch-backend.onrender.com:%d",port), app.routes())
-	err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
-
+	// err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
+	err := http.ListenAndServe(fmt.Sprintf("13.228.225.19:",port), app.routes())
 	if err != nil {
 		log.Fatal(err)
 	}
