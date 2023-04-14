@@ -6,11 +6,12 @@ import (
 	"log"
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
-    "go.mongodb.org/mongo-driver/mongo/options"
+  "go.mongodb.org/mongo-driver/mongo/options"
+	"net"
 )
 
 
-const port = "8080"
+const port = "80"
 const atlasConnectionUri = "mongodb+srv://anubhav11697:myMongo123@myfirstcluster.hfdwigv.mongodb.net/?retryWrites=true&w=majority"
 
 type application struct {
@@ -35,7 +36,7 @@ func main(){
 	// starts a web server
 	// err := http.ListenAndServe(fmt.Sprintf("https://subwatch-backend.onrender.com:%d",port), app.routes())
 	// err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
-	err := http.ListenAndServe(fmt.Sprintf("13.228.225.19:",port), app.routes())
+	err := http.ListenAndServe(net.JoinHostPort("13.228.225.19", port), app.routes())
 	if err != nil {
 		log.Fatal(err)
 	}
