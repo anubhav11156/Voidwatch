@@ -10,7 +10,7 @@ import (
 )
 
 
-// const port = 8080
+const port = 8080
 const atlasConnectionUri = "mongodb+srv://anubhav11697:myMongo123@myfirstcluster.hfdwigv.mongodb.net/?retryWrites=true&w=majority"
 
 type application struct {
@@ -34,7 +34,7 @@ func main(){
 
 	// starts a web server
 	// err := http.ListenAndServe(fmt.Sprintf("https://subwatch-backend.onrender.com:%d",port), app.routes())
-	err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com"), app.routes())
+	err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
 
 	if err != nil {
 		log.Fatal(err)
