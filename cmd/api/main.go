@@ -33,7 +33,7 @@ func main(){
 	// http.HandleFunc("/",Hello)
 
 	// starts a web server
-	err := http.ListenAndServe(fmt.Sprintf(":%d",port), app.routes())
+	err := http.ListenAndServe(fmt.Sprintf("https://subwatch-backend.onrender.com:%d",port), app.routes())
 	if err != nil {
 		log.Fatal(err)
 	}
