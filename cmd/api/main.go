@@ -1,11 +1,12 @@
 package main
 
 import (
+	"backend/internal/respository"
+	"backend/internal/respository/dbrepo"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
-
-	"go.mongodb.org/mongo-driver/mongo"
 	// "net"
 )
 
@@ -14,8 +15,8 @@ const port = 8080
 // var atlasConnectionUri string
 
 type application struct {
-	Domain string
-	DB     mongo.Database
+	Domain   string
+	Database respository.DatabaseRepo
 }
 
 func main() {
@@ -32,7 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	app.DB = *connection
+	app.Database = &dbrepo.MongoDBRepo{DB: connection}
+	defer connection.Client().Disconnect(context.Background())
 
 	log.Println("Starting application... ")
 
