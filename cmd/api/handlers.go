@@ -68,6 +68,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 
+	// app.Database is alredy initalized to mongodb connection
 	movies, err := app.Database.AllMovies()
 	if err != nil {
 		fmt.Println(err)

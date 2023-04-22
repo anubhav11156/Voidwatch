@@ -29,10 +29,12 @@ func main() {
 
 	app.Domain = "example.com"
 
+	// => connect to mongodb database
 	connection, err := app.connectToDB()
 	if err != nil {
 		log.Fatal(err)
 	}
+	// app.Database is of type DatabaseRepo defined in repository, so u have to populate it wiht your connection
 	app.Database = &dbrepo.MongoDBRepo{DB: connection}
 	defer connection.Client().Disconnect(context.Background())
 
