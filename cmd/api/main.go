@@ -1,29 +1,42 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"log"
 	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
-  "go.mongodb.org/mongo-driver/mongo/options"
-	"net"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	// "net"
 )
 
+const port = 8080
 
-const port = "8080"
-const atlasConnectionUri = "mongodb+srv://anubhav11697:myMongo123@myfirstcluster.hfdwigv.mongodb.net/?retryWrites=true&w=majority"
+var atlasConnectionUri string
 
 type application struct {
 	Domain string
 }
 
-func main(){
+func main() {
 	// steps
 	// 1. set application configs
 	// 2. read from command line
 	// 3. connnect to database
 	// 4. start a web server
+
+	// load the env
+
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	atlasConnectionUri = os.Getenv("MONGO_DB")
 
 	var app application
 
@@ -31,17 +44,14 @@ func main(){
 
 	log.Println("Starting application... ")
 
-	// http.HandleFunc("/",Hello)
-
 	// starts a web server
-	// err := http.ListenAndServe(fmt.Sprintf("https://subwatch-backend.onrender.com:%d",port), app.routes())
+	serverErr := http.ListenAndServe(fmt.Sprintf("localhost:%d", port), app.routes())
 	// err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
-	err := http.ListenAndServe(net.JoinHostPort("0.0.0.0", port), app.routes())
+	// err := http.ListenAndServe(net.JoinHostPort("0.0.0.0", port), app.routes())
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(serverErr)
 	}
 }
-
 
 // get your mongodb database
 func GetDb() (*mongo.Database, error) {
@@ -50,7 +60,6 @@ func GetDb() (*mongo.Database, error) {
 
 	opts := options.Client().ApplyURI(atlasConnectionUri)
 
-
 	client, err := mongo.Connect(context.TODO(), opts)
 
 	if err != nil {
@@ -58,8 +67,7 @@ func GetDb() (*mongo.Database, error) {
 		// return
 	}
 
-	// check the connection
-
+	// check connection of your database
 	err = client.Ping(context.TODO(), nil)
 
 	if err != nil {

@@ -1,116 +1,122 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"encoding/json"
+	"backend/internal/models"
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	// "time"
 	// "backend/internal/models"
 	// "backend/internal/databases"
 )
 
+var db *mongo.Database = nil
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
-	// // fmt.Fprintf(w, "Hello Anubhav")
-	// fmt.Fprintf(w,"Hello Anubhav from %s", app.Domain)
+
 	var payload = struct {
-		Status string `json:"status"`
-		Message string `json:"message"`
-		Version string `json:"version"`
+		Status      string   `json:"status"`
+		Message     string   `json:"message"`
+		Version     string   `json:"version"`
 		Collections []string `josn:"collections"`
 	}{
-		Status:"active",
-		Message:"Welcome to subwatch!",
-		Version:"1.0.0",
+		Status:  "active",
+		Message: "Welcome to subwatch!",
+		Version: "1.0.0",
 	}
 
-	db , err := GetDb();
+	if db == nil {
 
-	// db := client.Database(dbName)
+		var err error
+		db, err = GetDb()
+		dbErr := db.Client().Ping(context.TODO(), nil)
 
+		if err != nil {
+			log.Fatal(dbErr)
+		}
+
+	}
+
+	// get all collections in you database
 	collections, err := db.ListCollectionNames(context.TODO(), bson.M{})
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-	for _, coll := range collections {
-		// fmt.Print(coll)
-		// fmt.Print(" ")
 
-		payload.Collections = append(payload.Collections, coll)
+		for _, coll := range collections {
+			payload.Collections = append(payload.Collections, coll)
+		}
+
+		out, err := json.Marshal(payload)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(out)
 	}
 
+}
 
-	out, err := json.Marshal(payload)
+func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
+
+	var movies []models.Movie
+
+	rd, _ := time.Parse("2006-01-02", "1986-03-07")
+
+	Highlander := models.Movie{
+		ID:          1,
+		Title:       "Highlander",
+		ReleaseDate: rd,
+		MPAARating:  "R",
+		RunTime:     116,
+		Description: "A very nice movie",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+
+	movies = append(movies, Highlander)
+
+	rd, _ = time.Parse("2006-01-02", "1981-06-12")
+
+	rotla := models.Movie{
+		ID:          2,
+		Title:       "Raiders of the lost Art",
+		ReleaseDate: rd,
+		MPAARating:  "PG-13",
+		RunTime:     115,
+		Description: "Another very nice movie",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+
+	movies = append(movies, rotla)
+
+	out, err := json.Marshal(movies)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	w.Header().Set("Content-Type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
-	}
-
 }
-
-
-// func (app *application) AllMovies(w http.ResponseWriter, r *http.Request){
-
-// 	var movies []models.Movie
-
-// 	rd, _ := time.Parse("2006-01-02","1986-03-07")
-
-// 	Highlander := models.Movie {
-// 		ID:1,
-// 		Title:"Highlander",
-// 		ReleaseDate: rd,
-// 		MPAARating: "R",
-// 		RunTime: 116,
-// 		Description: "A very nice movie",
-// 		CreatedAt: time.Now(),
-// 		UpdatedAt: time.Now(),
-// 	}
-
-// 	// movies = append(movies, Highlander)
-
-// 	rd, _ = time.Parse("2006-01-02","1981-06-12")
-
-
-// 	rotla := models.Movie {
-// 		ID:2,
-// 		Title:"Raiders of the lost Art",
-// 		ReleaseDate: rd,
-// 		MPAARating: "PG-13",
-// 		RunTime: 115,
-// 		Description: "Another very nice movie",
-// 		CreatedAt: time.Now(),
-// 		UpdatedAt: time.Now(),
-// 	}
-
-// 	// movies = append(movies, rotla)
-
-// 	out, err := json.Marshal(movies)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-
-// 	w.Header().Set("Content-Type","application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write(out)
-// }
 
 // func (app *application) createMovie(w http.ResponseWriter, r *http.Request) {
 
 // 	// var movies models.Movie
 
 // 	rd, _ := time.Parse("2006-01-02","1986-03-07")
-
-
 
 // 	Highlander := models.Movie {
 // 		ID:1,
