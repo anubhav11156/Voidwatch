@@ -14,7 +14,7 @@ type MongoDBRepo struct {
 	DB *mongo.Database
 }
 
-const dbTimeout = time.Second * 5 // 3 seconds to query the database
+const dbTimeout = time.Second * 5 // 5 seconds to query the database
 
 func (m *MongoDBRepo) AllMovies() ([]*models.Movie, error) {
 

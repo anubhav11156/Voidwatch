@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -52,16 +51,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 		for _, coll := range collections {
 			payload.Collections = append(payload.Collections, coll)
 		}
-
-		out, err := json.Marshal(payload)
-
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(out)
+		_ = app.writeJSON(w, http.StatusOK, payload)
 	}
 
 }
@@ -71,15 +61,10 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	// app.Database is alredy initalized to mongodb connection
 	movies, err := app.Database.AllMovies()
 	if err != nil {
-		fmt.Println(err)
+		app.errorJSON(w, err)
 		return
 	}
-
-	out, err := json.Marshal(movies)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(out)
+	_ = app.writeJSON(w, http.StatusOK, movies)
 }
 
 // func (app *application) createMovie(w http.ResponseWriter, r *http.Request) {
