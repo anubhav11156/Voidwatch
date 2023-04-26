@@ -69,6 +69,7 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// validate user against database
 	user, err := app.Database.GetUserByEmail(requestPayload.Email)
+	// user, err := app.Database.GetUserByEmail("anubhav11697@gmail.com")
 	if err != nil {
 		app.errorJSON(w, errors.New("Invalid credentials"), http.StatusBadRequest)
 		return
