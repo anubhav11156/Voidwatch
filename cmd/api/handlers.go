@@ -7,9 +7,6 @@ import (
 	"net/http"
 
 	"go.mongodb.org/mongo-driver/bson"
-	// "time"
-	// "backend/internal/models"
-	// "backend/internal/databases"
 )
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
@@ -24,17 +21,6 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 		Message: "Welcome to subwatch!",
 		Version: "1.0.0",
 	}
-
-	// if db == nil {
-
-	// 	var err error
-	// 	dbErr := db.Client().Ping(context.TODO(), nil)
-
-	// 	if err != nil {
-	// 		log.Fatal(dbErr)
-	// 	}
-
-	// }
 
 	db, err := app.connectToDB()
 	if err != nil {
@@ -67,33 +53,27 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	_ = app.writeJSON(w, http.StatusOK, movies)
 }
 
-// func (app *application) createMovie(w http.ResponseWriter, r *http.Request) {
+func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
+	// read json payload
 
-// 	// var movies models.Movie
+	// validate user against database
 
-// 	rd, _ := time.Parse("2006-01-02","1986-03-07")
+	// chekc password (mathc the hash)
 
-// 	Highlander := models.Movie {
-// 		ID:1,
-// 		Title:"Highlander",
-// 		ReleaseDate: rd,
-// 		MPAARating: "R",
-// 		RunTime: 116,
-// 		Description: "A very nice movie",
-// 		CreatedAt: time.Now(),
-// 		UpdatedAt: time.Now(),
-// 	}
+	// create a jwt user
+	u := jwtUser{
+		ID:        1,
+		FirstName: "Anubhav",
+		LastName:  "Kumar",
+	}
 
-// 	client := databases.getMongoClient();
+	// generate tokens
+	tokens, err := app.auth.GenerateTokenPair(&u)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
 
-// 	collection := client.Database("myDatabase").Collection("myCollection")
+	w.Write([]byte(tokens.Token))
 
-// 	result, err := collection.InsertOne(context.TODO(), Highlander)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	} else {
-// 		fmt.Println("Inserted!")
-// 	}
-
-// }
+}

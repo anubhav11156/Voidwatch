@@ -4,9 +4,11 @@ import (
 	"backend/internal/respository"
 	"backend/internal/respository/dbrepo"
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 	// "net"
 )
 
@@ -15,8 +17,13 @@ const port = 8080
 // var atlasConnectionUri string
 
 type application struct {
-	Domain   string
-	Database respository.DatabaseRepo
+	Domain       string
+	Database     respository.DatabaseRepo
+	auth         Auth
+	JWTSecret    string
+	JWTIssuer    string
+	JWTAudience  string
+	CookieDomain string
 }
 
 func main() {
@@ -27,8 +34,13 @@ func main() {
 	// 4. start a web server
 	var app application
 
-	app.Domain = "example.com"
-
+	// read from command line
+	flag.StringVar(&app.JWTSecret, "jwt-secret", "myJWTSecret", "sigining secret")
+	flag.StringVar(&app.JWTIssuer, "jwt-issuer", "subwatch.com", "sigining issuer")
+	flag.StringVar(&app.JWTAudience, "jwt-audience", "subwatch.com", "sigining audience")
+	flag.StringVar(&app.CookieDomain, "cookie-domain", "localhost", "cookie domain")
+	flag.StringVar(&app.Domain, "app-domain", "example.com", "domain")
+	flag.Parse()
 	// => connect to mongodb database
 	connection, err := app.connectToDB()
 	if err != nil {
@@ -38,8 +50,19 @@ func main() {
 	app.Database = &dbrepo.MongoDBRepo{DB: connection}
 	defer connection.Client().Disconnect(context.Background())
 
-	log.Println("Starting application... ")
+	app.auth = Auth{
+		Issuer:        app.JWTIssuer,
+		Audience:      app.JWTAudience,
+		Secret:        app.JWTSecret,
+		TokenExpiry:   time.Minute * 15,
+		RefreshExpiry: time.Hour * 24,
+		CookiePath:    "/",
+		// under score unde score make it more secure
+		CookieName:   "__Host-refresh-token",
+		CookieDomain: app.CookieDomain,
+	}
 
+	log.Println("Starting application... ")
 	// starts a web server
 	serverErr := http.ListenAndServe(fmt.Sprintf("localhost:%d", port), app.routes())
 	// err := http.ListenAndServe(fmt.Sprintf("subwatch-backend.onrender.com:",port), app.routes())
