@@ -24,7 +24,7 @@ func openDatabase() error {
 
 	// create a connection with connecton pooling
 	clientOptions := options.Client().ApplyURI(atlasConnectionUri)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel() // for the context to be cancelled at the end of the function execution
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {

@@ -65,3 +65,21 @@ func (m *MongoDBRepo) GetUserByEmail(email string) (*models.User, error) {
 
 	return &user, nil
 }
+
+func (m *MongoDBRepo) GetUserById(userId int) (*models.User, error) {
+	// defined my own context
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	collection := m.DB.Collection("users")
+	// apply a filter
+
+	filter := bson.M{"_id": userId}
+	var user models.User
+	err := collection.FindOne(ctx, filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
