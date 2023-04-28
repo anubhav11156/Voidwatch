@@ -1,0 +1,60 @@
+.heading {
+  margin-left: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.text {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.login-btn {
+  width: 5rem;
+  height: 30px;
+  margin-right: 80px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.8s;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+  color: white;
+  text-decoration: none;
+}
+
+.logut-btn {
+  width: 5rem;
+  height: 30px;
+  margin-right: 80px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(198, 14, 14, 0.9);
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.8s;
+}
+
+.logut-btn:hover {
+  opacity: 0.9;
+  color: white;
+  text-decoration: none;
+}
+
