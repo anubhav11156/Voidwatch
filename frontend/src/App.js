@@ -25,9 +25,11 @@ function App() {
 
     fetch(`/logout`, requestOptions)
       .catch(error => {
+        console.log("this")
         console.log("error logging out", error)
       })
       .finally(() => {
+        console.log('logged out')
         setJwtToken("")
         toggleRefresh(false)
       })
@@ -35,8 +37,6 @@ function App() {
   }
 
   const toggleRefresh = useCallback((status) => {
-    console.log("clicked!")
-
     // if not ticking
     if (status) {
       let i = setInterval(() => {
@@ -57,7 +57,6 @@ function App() {
           })
       }, 600000); // 10 min
       setTickInterval(i)
-      console.log("settting tick interval to : ", i)
     } else {
       setInterval(null)
       clearInterval(tickInterval)

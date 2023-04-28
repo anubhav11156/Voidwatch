@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useOutletContext } from 'react-router-dom'
 
 function Login() {
-
+    
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
