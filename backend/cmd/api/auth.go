@@ -150,7 +150,7 @@ func (j *Auth) GetTokenFromHeaderAndVerify(w http.ResponseWriter, r *http.Reques
 		return []byte(j.Secret), nil
 	})
 
-	// if err is returned menas the token is expired
+	// if err is returned means the token is expired
 	if err != nil {
 		if strings.HasPrefix(err.Error(), "token is expired by") {
 			return "", nil, errors.New("Expired token")

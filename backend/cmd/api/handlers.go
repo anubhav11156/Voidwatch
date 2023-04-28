@@ -163,5 +163,11 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) MovieCatalog(w http.ResponseWriter, r *http.Request) {
-
+	// app.Database is alredy initalized to mongodb connection
+	movies, err := app.Database.AllMovies()
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	_ = app.writeJSON(w, http.StatusOK, movies)
 }
