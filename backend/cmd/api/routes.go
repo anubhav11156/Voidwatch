@@ -12,7 +12,6 @@ func (app *application) routes() http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.Recoverer)
-
 	mux.Use(app.enableCORS)
 
 	mux.Get("/", app.Home)
@@ -21,6 +20,12 @@ func (app *application) routes() http.Handler {
 	mux.Post("/authenticate", app.authenticate)
 
 	mux.Get("/getAllMovies", app.AllMovies)
+
+	//	will apply a middleware to any routes starting with /admin
+	mux.Route("/admin", func(mux chi.Router) {
+		mux.Use(app.authRequired) // if this is passed then only go down else return
+		mux.Get("/movies", app.MovieCatalog)
+	})
 
 	return mux
 }
