@@ -17,6 +17,7 @@ import Movie from './components/Movie';
 import ManageCatlouge from './components/ManageCatlouge';
 import GraphQl from './components/GraphQl';
 import Login from './components/Login';
+import EditMovie from './components/EditMovie';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/admin/movie/0',
-        element: <Movie />
+        element: <EditMovie />
       },
       {
         path:'/manage-catalouge',

@@ -1,9 +1,9 @@
 const Select = (props) => {
     return (
         <div className="mb-3">
-            <label htmlFor={props.name} className="form-label">
+            {/* <label htmlFor={props.name} className="form-label">
                 {props.title}
-            </label>
+            </label> */}
             <select 
             className="form-select"
             name={props.name}

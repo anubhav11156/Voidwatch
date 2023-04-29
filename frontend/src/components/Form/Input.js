@@ -5,7 +5,8 @@ import styled from 'styled-components'
 const Input = forwardRef((props, ref) => {
     return (
         <Container>
-            <input 
+            {/* <label className="form-label" >{props.title}</label> */}
+            <input
                 type={props.type}
                 ref={ref}
                 className={props.className}
