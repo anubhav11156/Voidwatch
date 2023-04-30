@@ -63,25 +63,31 @@ func (m *MongoDBRepo) GetOneMovie(id int) (*models.Movie, error) {
 	}
 
 	// now get genre associated with this movie
-	coll := m.DB.Collection("movies_genres")
+	collection = m.DB.Collection("movies_genres")
 	// apply a filter to get all the genres the movie is associate with
-	fil := bson.M{"movie_id": id}
-	cursor, err := coll.Find(ctx, fil)
+	filter = bson.M{"movie_id": id}
+	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer cursor.Close(context.Background())
-	var genres []*models.Genre
+
 	for cursor.Next(context.Background()) {
-		var currentGenre models.Genre
-		err := cursor.Decode(&currentGenre)
+		var movieToGenreId models.MovieGenres
+		var genre *models.Genre
+
+		err := cursor.Decode(&movieToGenreId)
 		if err != nil {
 			log.Fatal(err)
 		}
-		genres = append(genres, &currentGenre)
+		genreCollection := m.DB.Collection("genres")
+		genreFilter := bson.M{"_id": movieToGenreId.GenreId}
+		findError := genreCollection.FindOne(ctx, genreFilter).Decode(&genre)
+		if findError != nil {
+			log.Fatal(findError)
+		}
+		movie.Genres = append(movie.Genres, genre)
 	}
-	movie.Genres = genres
-
 	return &movie, nil
 }
 
@@ -92,7 +98,6 @@ func (m *MongoDBRepo) GetUserByEmail(email string) (*models.User, error) {
 
 	collection := m.DB.Collection("users")
 	// apply a filter
-
 	filter := bson.M{"email": email}
 	var user models.User
 	err := collection.FindOne(ctx, filter).Decode(&user)

@@ -17,11 +17,15 @@ type Movie struct {
 }
 
 type Genre struct {
-	ID int `json:"_id" bson:"_id"`
-	// MovieId int `json:"movie_id" bson:"movie_id"`
-	// GenreId int `json:"genre_id" bson:"genre_id"`
+	ID        int    `json:"_id" bson:"_id"`
 	Genre     string `json:"genre" bson:"genre"`
 	CreatedAt string `json:"created_at" bson:"created_at"`
 	UpdatedAt string `json:"updated_at" bson:"updated_at"`
 	Checked   bool   `json:"checked" bson:"checked"`
+}
+
+type MovieGenres struct {
+	ID      int `json:"_id" bson:"_id"`
+	MovieId int `json:"movie_id" bson:"movie_id"`
+	GenreId int `json:"genre_id" bson:"genre_id"`
 }
