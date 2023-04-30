@@ -108,6 +108,8 @@ function EditMovie() {
             rows="3"
             onChange={handleChange("description")}
           />
+          <hr />
+          <h4>Genres</h4>
         </form>
       </div>
 

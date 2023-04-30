@@ -6,26 +6,37 @@ import styled from 'styled-components'
 function Movie() {
 
     let {id} = useParams()
-    const [movies, setMovies] = useState({})
+    const [movie, setMovie] = useState({})
 
     useEffect(() => {
-        let movie = {
-            id: 1,
-            title: "Splinter Cell",
-            relase_date: "2002-02-11",
-            runtime: 112,
-            mppa_rating: "R",
-            description: "Some description"
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        const requestOptions = {
+            method: "GET",
+            headers: headers,
         }
-        setMovies(movie)
+
+        fetch(`http://localhost:8080/getOneMovie/${id}`, requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                setMovie(data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     },[id])
 
   return (
     <Container>
-        <p className='movieName'>Movie: {movies.title}</p>
-        <small><em>Release Date: {movies.relase_date} Runtime: {movies.runtime} Rated:{movies.mppa_rating}</em></small>
+        <p className='movieName'>Movie: {movie.title}</p>
+        <small><pre><em>Release Date: {movie.release_date}   Runtime: {movie.runtime}   Rated: {movie.mpaa_rating}</em></pre></small>
         <hr />
-        <p className='description'>{movies.description}</p>
+        <div>
+            <img src={`https://image.tmdb.org/t/p/w200${movie.image}`} alt='poster'/>
+        </div>
+        <hr />
+        <p className='description'>{movie.description}</p>
     </Container>
   )
 }
@@ -41,5 +52,9 @@ const Container = styled.div`
 
     .descrtiption {
         font-size: 18px;
+    }
+
+    small {
+        font-size: 14px;
     }
 `

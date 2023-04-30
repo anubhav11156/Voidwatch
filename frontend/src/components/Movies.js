@@ -9,9 +9,7 @@ function Movies() {
     useEffect(() => {
 
         const headers = new Headers();
-
         headers.append("Content-Type", "application/json");
-
         const requestOptions = {
             method: "GET",
             headers: headers,
@@ -20,13 +18,13 @@ function Movies() {
         fetch(`http://localhost:8080/getAllMovies`, requestOptions)
             .then((response) => response.json())
             .then((data) => {
-                console.log('data : ', data)
                 setMovies(data)
             })
             .catch((error) => {
                 console.log(error)
             })
     },[])
+
 
     return (
         <Container>
@@ -42,9 +40,9 @@ function Movies() {
                 </thead>
                 <tbody>
                     {movies.map((m) => (
-                        <tr key={m.id}>
+                        <tr key={m._id}>
                             <td>
-                                <Link to={`/movies/${m.id}`}>{m.title}</Link>
+                                <Link to={`/movies/${m._id}`}>{m.title}</Link>
                             </td>
                             <td>
                                 {m.release_date}
