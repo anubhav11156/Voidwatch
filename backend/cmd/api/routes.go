@@ -20,6 +20,7 @@ func (app *application) routes() http.Handler {
 	mux.Post("/authenticate", app.authenticate)
 
 	mux.Get("/getAllMovies", app.AllMovies)
+	mux.Get("/getOneMovie/{id}", app.getOneMovie)
 
 	//	will apply a middleware to any routes starting with /admin
 	mux.Route("/admin", func(mux chi.Router) {

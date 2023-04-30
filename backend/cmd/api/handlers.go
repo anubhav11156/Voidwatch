@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -54,6 +55,21 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = app.writeJSON(w, http.StatusOK, movies)
+}
+
+func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
+	// get the id from the url
+	movieId := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(movieId)
+	if err != nil {
+		app.errorJSON(w, err)
+	}
+	oneMovie, err := app.Database.GetOneMovie(id)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	_ = app.writeJSON(w, http.StatusOK, oneMovie)
 }
 
 func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
